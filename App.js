@@ -1,33 +1,62 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { Container, ListItem, Button, Text, Right, CardItem, Body, Input, Card } from 'native-base';
+import axios from 'axios';
 
 export default class App extends React.Component {
-  // constructor(){
-  //   super();
-  //   this.state={set:'',data:[]};
-  // }
+  constructor(){
+    super();
+    this.state={set:'',data:[]};
+  }
 
-  // addTask=()=>{
-  //   set = this.state.set;
-  //   if(set.length>0){
-  //     data = this.state.data.concat([set]);
-  //     this.setState({data:data});
-  //     this.setState({set:''})
-  //   } else{
-  //     alert('Please input your to do.')
-  //   }
-  // }
+  componentDidMount(){
+    const self = this;
+    axios.get('https://jsonplaceholder.typicode.com/todos')
+    .then(function(response){
+      self.setState({data: response.data});
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    });  
+  }
 
-  // set(text){
-  //   this.setState({set:text});
-  // }
+  set(text){
+    this.setState({set:text});
+  }    
 
-  // delete(i){
-  //   data = this.state.data.slice();
-  //   data.splice(i,1);
-  //   this.setState({data:data});
-  // }
+  addTask=()=>{
+    const self = this;
+    axios.post('https://jsonplaceholder.typicode.com/todos')
+    .then(function(response){
+      itext = self.state.set;
+      if(itext.length>0){
+        texti = self.state.data.concat([itext]);
+        self.setState({data:texti});
+        self.setState({set:''})
+      } else{
+        alert('Please input your to do.')
+      }  
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    });
+  }
+
+  delete(i){
+    const self = this;
+    axios.delete('https://jsonplaceholder.typicode.com/todos')
+    .then(function(response){
+      data = self.state.data.slice();
+      data.splice(i,1);
+      self.setState({data:data});
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    });  
+  }
 
   render() {
     return(
@@ -54,7 +83,7 @@ export default class App extends React.Component {
         renderItem={
           ({item, index}) =>
           <ListItem onLongPress={()=>this.delete(index)}>
-            <Text>{item}</Text>
+            <Text>{item.title}</Text>
           </ListItem>
         }
       />
