@@ -21,14 +21,10 @@ export default class App extends React.Component {
     });  
   }
 
-  set(text){
-    this.setState({set:text});
-  }    
-
   addTask=()=>{
     const self = this;
-    axios.post('https://jsonplaceholder.typicode.com/todos')
-    .then(function(response){
+    // axios.post('https://jsonplaceholder.typicode.com/todos')
+    // .then(function(response){
       itext = self.state.set;
       if(itext.length>0){
         texti = self.state.data.concat([itext]);
@@ -37,25 +33,29 @@ export default class App extends React.Component {
       } else{
         alert('Please input your to do.')
       }  
-      console.log(response);
-    })
-    .catch(function(error){
-      console.log(error);
-    });
+    //   console.log(response);
+    // })
+    // .catch(function(error){
+    //   console.log(error);
+    // });
   }
+
+  set(text){
+    this.setState({set:text});
+  }    
 
   delete(i){
     const self = this;
-    axios.delete('https://jsonplaceholder.typicode.com/todos')
-    .then(function(response){
+    // axios.delete('https://jsonplaceholder.typicode.com/todos')
+    // .then(function(response){
       data = self.state.data.slice();
       data.splice(i,1);
       self.setState({data:data});
-      console.log(response);
-    })
-    .catch(function(error){
-      console.log(error);
-    });  
+    //   console.log(response);
+    // })
+    // .catch(function(error){
+    //   console.log(error);
+    // });  
   }
 
   render() {
@@ -79,6 +79,8 @@ export default class App extends React.Component {
       </Card>
       <Card>
       <FlatList
+      keyExtractor={(item, index)=>index.toString()}
+        inverted={true}
         data={this.state.data}
         renderItem={
           ({item, index}) =>
