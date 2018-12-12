@@ -23,33 +23,41 @@ export default class App extends React.Component {
 
   addTask=()=>{
     const self = this;
-    // axios.post('https://jsonplaceholder.typicode.com/todos')
-    // .then(function(response){
-      itext = self.state.set;
-      if(itext.length>0){
-        texti = self.state.data.concat([itext]);
+
+    itext = self.state.set;
+    if(itext.length>0){
+      id = Math.max(...self.state.data.map((data) => data.id))+1;
+      axios.post('https://jsonplaceholder.typicode.com/todos',{
+        userId: 1,
+        id: id,
+        title: itext,
+        completed: false      
+      })
+      .then(function(response){
+        texti = self.state.data.concat({userId:11,id:id,title:itext,completed:false});
         self.setState({data:texti});
         self.setState({set:''})
-      } else{
-        alert('Please input your to do.')
-      }  
-    //   console.log(response);
-    // })
-    // .catch(function(error){
-    //   console.log(error);
-    // });
+        console.log(response);
+      })
+      .catch(function(error){
+        console.log(error);
+      });
+    } else {
+      alert('Please input your to do.')
+    }  
   }
 
   set(text){
     this.setState({set:text});
   }    
 
-  delete(i){
+  delete(i,id){
     const self = this;
+    index = self.state.data.indexOf(i);
     // axios.delete('https://jsonplaceholder.typicode.com/todos')
     // .then(function(response){
       data = self.state.data.slice();
-      data.splice(i,1);
+      data.splice(index,1);
       self.setState({data:data});
     //   console.log(response);
     // })
@@ -79,12 +87,11 @@ export default class App extends React.Component {
       </Card>
       <Card>
       <FlatList
-      keyExtractor={(item, index)=>index.toString()}
-        inverted={true}
-        data={this.state.data}
+        keyExtractor={(item, index)=>index.toString()}
+        data={this.state.data.sort((a, b) => b.id-a.id)}
         renderItem={
           ({item, index}) =>
-          <ListItem onLongPress={()=>this.delete(index)}>
+          <ListItem onLongPress={()=>this.delete(item,item.id)}>
             <Text>{item.title}</Text>
           </ListItem>
         }
